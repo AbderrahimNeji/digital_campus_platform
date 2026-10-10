@@ -14,6 +14,9 @@ class Settings(BaseSettings):
     SMTP_FROM_EMAIL: str | None = None
     SMTP_USE_TLS: bool = True
     RAG_PIPELINE_HANDLER: str | None = None
+    # "local" (default) loads sentence-transformers. "gemini" uses the Gemini
+    # embedding API at 768 dimensions. Never inferred from GEMINI_API_KEY.
+    EMBEDDING_PROVIDER: str = "local"
     # Local/dev only: auto-verify new accounts so login works without SMTP.
     # MUST stay False in production (the real email flow is the gate).
     AUTO_VERIFY_EMAIL: bool = False

@@ -34,13 +34,18 @@ async def lifespan(app: FastAPI):
     # ~30s embedding-model load. Best-effort: a warmup failure (e.g. no LLM
     # key yet) must not stop the API from serving.
     try:
-        from ai.rag.embeddings import embed_query
+        from ai.rag.embeddings import embed_query, embedding_provider
         from ai.llm.client import get_llm
 
-        embed_query("warmup")
+        # The local model takes tens of seconds and more RAM than Render Free
+        # has. Gemini embeddings are a network call, so don't spend one on startup.
+        if embedding_provider() == "local":
+            embed_query("warmup")
+            log.info("Warmup complete: local embedding model + LLM clients ready.")
+        else:
+            log.info("Embedding provider is %s; the local model was not loaded.", embedding_provider())
         get_llm()
         get_llm(model=os.getenv("GROUNDEDNESS_GRADER_MODEL"))
-        log.info("Warmup complete: embedding model + LLM clients ready.")
     except Exception as exc:
         log.warning("Warmup incomplete (continuing to serve): %s", exc)
     yield

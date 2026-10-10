@@ -1,0 +1,52 @@
+# Render Free web service for the API. Apply this only when you are ready.
+# Neon, not Render Postgres, holds the data. Secrets are entered in the
+# dashboard (sync: false); none are stored in this file.
+services:
+  - type: web
+    name: digital-campus-api
+    runtime: python
+    plan: free
+    region: frankfurt
+    buildCommand: pip install -r backend/requirements.txt -r ai/requirements-prod.txt
+    startCommand: sh scripts/start_api.sh
+    healthCheckPath: /
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.8"
+      - key: EMBEDDING_PROVIDER
+        value: gemini
+      - key: LLM_PROVIDER
+        value: gemini
+      - key: GEMINI_MODEL
+        value: gemini-3.5-flash-lite
+      - key: RAG_PIPELINE_HANDLER
+        value: ai.integration:answer_chat
+      - key: AUTO_VERIFY_EMAIL
+        value: "false"
+      - key: ALGORITHM
+        value: HS256
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "720"
+      - key: DATABASE_URL
+        sync: false
+      - key: SECRET_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: SMTP_HOST
+        sync: false
+      # Render Free blocks outbound ports 25, 465, and 587. Brevo accepts 2525.
+      - key: SMTP_PORT
+        value: "2525"
+      - key: SMTP_USERNAME
+        sync: false
+      - key: SMTP_PASSWORD
+        sync: false
+      - key: SMTP_FROM_EMAIL
+        sync: false
+      - key: SMTP_USE_TLS
+        value: "true"

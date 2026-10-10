@@ -1,3 +1,5 @@
+# Local development, including the in-process embedding model.
+# The hosted API installs ai/requirements-prod.txt instead (no PyTorch).
 # Pinned to a verified-working set (see backend/requirements.txt).
 google-genai==2.28.0
 mistralai==3.1.0

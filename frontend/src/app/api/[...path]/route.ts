@@ -5,6 +5,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { SESSION_COOKIE } from '@/lib/session';
 
 const API_URL = (process.env.API_URL ?? 'http://localhost:8000').replace(/\/$/, '');
+
+// Render Free can take about a minute to wake, then the answer still has to stream.
+export const maxDuration = 300;
 const PASS_HEADERS = ['content-type', 'cache-control', 'content-disposition'];
 
 function tokenExpiry(token: string): Date | undefined {

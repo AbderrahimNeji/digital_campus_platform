@@ -1,0 +1,8 @@
+# Hosted API only. No PyTorch and no sentence-transformers: those stay in
+# ai/requirements.txt for local development, where EMBEDDING_PROVIDER=local.
+#
+# Render build command, from the repository root:
+#   pip install -r backend/requirements.txt -r ai/requirements-prod.txt
+google-genai==2.28.0
+mistralai==3.1.0
+python-dotenv==1.2.4

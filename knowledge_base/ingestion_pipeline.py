@@ -40,7 +40,13 @@ def ingest_document_pipeline(document_id: str):
             from ai.rag.embeddings import embed_texts
             embeddings = embed_texts([c["text"] for c in chunks], batch_size=32)
 
-        db.query(DocumentChunk).filter(DocumentChunk.document_id == doc.id).delete()
+        # Only this admin document's global chunks. Student course chunks have a
+        # student_id and a null document_id, so they are not part of this delete.
+        db.query(DocumentChunk).filter(
+            DocumentChunk.document_id == doc.id,
+            DocumentChunk.student_id.is_(None),
+            DocumentChunk.material_id.is_(None),
+        ).delete(synchronize_session=False)
         db.add_all(
             DocumentChunk(
                 document_id=doc.id,
